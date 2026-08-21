@@ -1,6 +1,6 @@
 # clap-ai-skills
 
-[AI skill](https://github.com/anthropics/skills) for [CLAP](https://cleveraudio.org/) (CLever Audio Plugin) — same shape as [slint-ui/ai-plugins](https://github.com/slint-ui/ai-plugins): a `skills/clap/` folder an agent reads.
+[AI skill](https://github.com/anthropics/skills) for [CLAP](https://cleveraudio.org/) (CLever Audio Plugin).
 
 Not official CLAP. Not affiliated with Bitwig or [free-audio](https://github.com/free-audio/clap). Not a vendor framework. Headers are the spec.
 
