@@ -14,8 +14,8 @@ crates.io version (do not copy a stale pin from a tutorial).
 clap-sys = "0.5" # check crates.io
 ```
 
-Higher-level frameworks sit on `clap-sys` (nice-plug, AURA, …). Follow the
-framework; this skill's rules still apply underneath.
+Higher-level frameworks sit on `clap-sys`. Follow the framework; this
+skill's rules still apply underneath.
 
 ## C / C++
 

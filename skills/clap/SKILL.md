@@ -4,7 +4,7 @@ description: >
   Use when writing, editing, debugging, or reviewing CLAP plugins (C, C++, Rust,
   or any binding) — clap_entry, factory, process(), params, GUI, ports, state,
   thread-safety, naming, and clap-validator. Triggers: CLAP, .clap, clap-sys,
-  clap-validator, audio plugin ABI, clap.gui, clap.params.
+  clap-validator, audio plugin ABI, clap.params, clap.state.
 ---
 
 # CLAP Development Skill
