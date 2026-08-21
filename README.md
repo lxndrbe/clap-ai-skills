@@ -6,9 +6,7 @@ Not official CLAP. Not affiliated with Bitwig or [free-audio](https://github.com
 
 ## What's inside
 
-- `skills/clap/` — CLAP format and C ABI: entry point, factory, process, events, params, ports, state, threading, extensions, clap-validator.
-
-Same layout as the Slint skill: `SKILL.md` + `setup.md` + `tools-install.md` + `reference/`.
+- `skills/clap/` — CLAP format and C ABI: entry point, factory, process, events, params, ports, state, threading, extensions, clap-validator. Layout: `SKILL.md` + `setup.md` + `tools-install.md` + `reference/`.
 
 ## Install
 
