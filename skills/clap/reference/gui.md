@@ -5,7 +5,7 @@ unless noted. Do not touch the GUI from `process()`.
 
 Two modes:
 
-1. **Embedded** (host parent window) — support this. Every host does.
+1. **Embedded** (host parent window) — support this. Upstream: all hosts to date.
 2. **Floating** (plugin-owned window) — fallback when embed is impossible.
 
 ## Window APIs

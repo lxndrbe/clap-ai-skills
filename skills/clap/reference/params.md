@@ -28,11 +28,12 @@ drops sample offsets.
 
 Heard value = **param value + modulation amount**.
 
-When the plugin changes a param (GUI knob), it must emit `CLAP_EVENT_PARAM_VALUE`
+When the plugin changes a param (editor knob), it must emit `CLAP_EVENT_PARAM_VALUE`
 from `process()` or `flush()`. Wrap a user drag with
-`CLAP_EVENT_PARAM_GESTURE_BEGIN` / `END`. From the GUI thread, call
-`clap_host_params->request_flush()` or `host->request_process()` — never from
-the audio thread (`request_flush` is `[thread-safe, !audio-thread]`).
+`CLAP_EVENT_PARAM_GESTURE_BEGIN` / `END`. From the **main thread** (that is
+where `clap.gui` runs), call `clap_host_params->request_flush()` or
+`host->request_process()` — never from the audio thread (`request_flush` is
+`[thread-safe, !audio-thread]`). Do not invent a second “GUI thread”.
 
 MIDI-CC-driven param changes: set `CLAP_EVENT_DONT_RECORD` on the param event.
 

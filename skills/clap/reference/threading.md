@@ -9,7 +9,8 @@ validator failure. This is the #1 source of CLAP bugs.
   `init` / `activate` / `deactivate` / `destroy`. GUI, most param queries, and
   most host calls live here.
 - `[audio-thread]` — `process()` (and `start_processing` / `stop_processing` /
-  `reset`). Real-time: no allocation, no lock, no blocking, no GUI, no syscalls.
+  `reset`). Real-time: no allocation, no **blocking** lock, no blocking I/O,
+  no GUI. Atomics / lock-free queues are fine. Mutexes belong on main/init.
 - `[thread-safe]` — callable from any thread concurrently (factory,
   `get_extension`, `request_*`).
 
@@ -29,8 +30,10 @@ created → init → activate → start_processing → process (loop) → stop_p
 - `reset` — `[audio-thread & active]`; full DSP reset (filters, voices, LFOs);
   parameter values stay. `steady_time` may jump backward.
 
-Latency and port configuration must stay constant while active. Change them
-only while deactivated (or `host->request_restart()` and wait).
+Latency and port configuration must stay constant while **active** (after
+`activate` returns). Latency may be reported during `activate`
+(`[being-activated]`). To change it later: `host->request_restart()`, then
+apply on the next `activate`. Same for ports.
 
 `activate` receives `sample_rate`, `min_frames_count`, `max_frames_count`.
 Those stay valid until `deactivate`. Allocate DSP buffers here, not in

@@ -14,7 +14,7 @@ Treat a failure as a plugin bug.
 |---------|-------|-----|
 | host won't load the DSO | missing/incorrect `clap_entry`, wrong `clap_version` | exported symbol + `CLAP_VERSION` init |
 | thread-safety violation | `[main-thread]` on audio thread (or vice versa) | bounce via `request_callback` / `on_main_thread`; [threading.md](threading.md) |
-| missing extension | declaring a feature but no matching extension | implement it or drop the feature |
+| missing ports | instrument with no `clap.note-ports`, or effect with no `clap.audio-ports` | add the extension the DSP uses; feature strings do **not** imply an extension |
 | blank mandatory fields | descriptor `id` / `name` empty | fill them ([naming-and-versioning.md](naming-and-versioning.md)) |
 | state not round-tripping | save/load mismatch | save → load → save; [state.md](state.md) |
 | GUI attach fail | skipped embed path / wrong window API | [gui.md](gui.md) |

@@ -1,5 +1,8 @@
 # Entry point
 
+Illustrative field lists — include `clap/entry.h` / `factory/plugin-factory.h`,
+do not paste these typedefs (they omit `CLAP_ABI`).
+
 The plugin DSO exports exactly one symbol:
 
 ```c
@@ -51,8 +54,11 @@ typedef struct clap_plugin_factory {
 ```
 
 - All factory methods are `[thread-safe]`. Scan must be fast.
+- `create_plugin` must return `NULL` if
+  `!clap_version_is_compatible(host->clap_version)`.
 - `create_plugin` returns an instance but must **not** use host callbacks —
-  that is `clap_plugin->init` (full host access there).
+  that is `clap_plugin->init` (full host access there). In `init`, null-check
+  each host extension pointer **and** its function pointers.
 - `plugin_id` is the descriptor `id` string ([naming-and-versioning.md](naming-and-versioning.md)).
 - Descriptor is owned by the plugin; valid until `clap_entry.deinit()`.
 - Host pointer is valid until after `plugin->destroy()`.

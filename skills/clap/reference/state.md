@@ -8,8 +8,8 @@ bool save(const clap_plugin_t *plugin, const clap_ostream_t *stream); // [main-t
 bool load(const clap_plugin_t *plugin, const clap_istream_t *stream); // [main-thread]
 ```
 
-Use the stream helpers (`read`/`write` may be partial — loop until done or
-error). Do not assume `FILE*`.
+`read`/`write` may be partial — loop. Return: `>0` bytes, `0` = EOF (istream
+only), `-1` = error. Do not assume `FILE*`.
 
 After a successful `load`:
 

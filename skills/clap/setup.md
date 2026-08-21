@@ -15,11 +15,13 @@ Compile against `include/clap/clap.h`. Include `clap/all.h` only if you use draf
 Start from `src/plugin-template.c` in the clap repo:
 https://github.com/free-audio/clap/blob/main/src/plugin-template.c
 
-Build a shared library with the `.clap` extension:
+Build a shared library with the `.clap` extension. Include `clap/clap.h`;
+do not re-declare CLAP structs.
 
 - Linux: `.clap` (shared object)
-- Windows: `.clap` (DLL renamed / linked as such)
-- macOS: `.clap` **bundle**
+- Windows: `.clap` (DLL renamed / linked as such). `CLAP_EXPORT` is required
+  so `clap_entry` is visible.
+- macOS: `.clap` **bundle** (not a flat dylib named `.clap`)
 
 ## C++
 

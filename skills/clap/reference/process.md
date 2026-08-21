@@ -3,23 +3,29 @@
 `plugin->process` is `[audio-thread & active & processing]`. All pointers in
 `clap_process_t` and nested structs are valid only until `process` returns.
 
-```c
-typedef struct clap_process {
-    int64_t steady_time;           // -1 if unknown; else ≥ 0, increases by ≥ frames_count
-    uint32_t frames_count;
-    const clap_event_transport_t *transport; // null = free-running host
-    const clap_audio_buffer_t *audio_inputs;
-    clap_audio_buffer_t       *audio_outputs;
-    uint32_t audio_inputs_count;
-    uint32_t audio_outputs_count;
-    const clap_input_events_t  *in_events;
-    const clap_output_events_t *out_events;
-} clap_process_t;
-```
+Fields (see `clap/process.h`, do not re-declare): `steady_time` (`-1` if
+unknown; else `>= 0` and grows by at least `frames_count`), `frames_count`,
+`transport` (null = free-running), `audio_inputs` / `audio_outputs` + counts,
+`in_events` / `out_events`.
 
 Audio buffer count must match `clap_plugin_audio_ports->count()`. Index maps
 to `audio_ports->get()`. Inputs are read-only. 32-bit audio is required;
 64-bit is optional (see [ports.md](ports.md)).
+
+`clap_audio_buffer_t`: either `data32` or `data64` is set (not both). Check
+which. `constant_mask` bit *n* means channel *n* is a constant (use index 0);
+it is a hint — still fill outputs completely or the host may play garbage.
+
+## Sample-accurate loop
+
+Do **not** apply all input events at frame 0, then render the whole block.
+Walk `in_events` in time order. At sample `i`, dispatch every event with
+`header.time == i`, then render `[i, next_event.time)`. Ignore events whose
+`space_id` is not `CLAP_CORE_EVENT_SPACE_ID` unless you registered a custom
+space.
+
+Canonical loop: `my_plug_process` in
+https://github.com/free-audio/clap/blob/main/src/plugin-template.c
 
 ## Return status
 

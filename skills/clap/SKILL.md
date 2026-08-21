@@ -7,14 +7,17 @@ description: >
   clap-validator, audio plugin ABI, clap.params, clap.state.
 ---
 
-# CLAP Development Skill
+# CLAP plugin skill
 
-For building, debugging, or reviewing audio plugins that target
-[CLAP](https://cleveraudio.org/) (CLever Audio Plugin).
+For **writing plugins** that speak [CLAP](https://cleveraudio.org/). Not for
+changing the CLAP spec — that stays with [free-audio/clap](https://github.com/free-audio/clap).
 
-**Authority:** C headers in [free-audio/clap](https://github.com/free-audio/clap)
-(`include/clap/`). This skill is a workflow. Header comments win on thread
-specs, lifetimes, and ABI. All strings are UTF-8.
+**Authority:** C headers (`include/clap/`). This skill is a workflow. Header
+comments win on thread specs, lifetimes, and ABI. All strings are UTF-8.
+
+**Do not paste struct layouts from this skill into code.** Snippets omit
+`CLAP_ABI` and can lag. Include `clap/clap.h` (or `clap-sys`). Copy wiring
+from `src/plugin-template.c` in the clap repo.
 
 ## Workflow
 
@@ -22,11 +25,33 @@ specs, lifetimes, and ABI. All strings are UTF-8.
    `CLAP_VERSION_MAJOR/MINOR/REVISION` in `clap/version.h`. This skill targets
    CLAP **1.x**. A plugin built against `1.x` loads in any `1.y` host
    (`clap_version_is_compatible` → `v.major >= 1`). Draft extensions
-   (`include/clap/ext/draft/`) can change.
+   (`include/clap/ext/draft/`) can change — do not add drafts unless the
+   project already uses them.
 2. After edits: compile, then run [clap-validator](https://github.com/robbert-vdh/clap-validator)
    on the built `.clap`. Do not claim the plugin works without that report.
 3. Validator catches ABI and thread bugs. GUI attach, param mapping, presets,
    and port names also need a real host scan (Bitwig, REAPER, Ardour) when possible.
+
+## What to implement
+
+Always: `clap_entry` + factory + descriptor + `clap_plugin` vtable
+([entry-point.md](reference/entry-point.md)). `create_plugin` must reject an
+incompatible host (`clap_version_is_compatible(host->clap_version)`).
+
+Then only the extensions the plugin actually needs:
+
+| Plugin kind | Typical extensions |
+|-------------|-------------------|
+| Audio effect | `clap.audio-ports`, `clap.params`, `clap.state` |
+| Instrument / note FX | those + `clap.note-ports` |
+| Has delay / lookahead | + `clap.latency` |
+| Reverb / decay | + `clap.tail` |
+| Has an editor | + `clap.gui` |
+| Offline render sounds different | + `clap.render` |
+| Polyphonic modulation | + `clap.voice-info` |
+
+Do not implement `clap.render` / `clap.gui` / `clap.tail` “for completeness”.
+Skip unused extensions; return `NULL` from `get_extension`.
 
 Most "host won't load it" / "validator fails" / "crackles on the audio thread"
 questions: [threading.md](reference/threading.md),
